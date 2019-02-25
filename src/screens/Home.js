@@ -32,10 +32,10 @@ export default class Home extends Component {
         this.orderByFilter = this.orderByFilter.bind(this);
     }
 
-    getSearchTextFromHeader(searchText) {
+    getSearchTextFromHeader(e) {
         //console.log(searchText);
         var mySearchArr = [];
-        const start = searchText;
+        const start = e.target.value;
         const end = start + '\uf8ff';
 
         //console.log(start, end);
@@ -245,10 +245,10 @@ export default class Home extends Component {
                 <Container>
                     <Row className="mt-3">
                         <Col md="10">
-                            <Input onChange={this.getText.bind(this)} type="text" placeholder="Search by title.." />
+                            <Input onChange={this.getSearchTextFromHeader} type="text" placeholder="Search by title.." />
                         </Col>
                         <Col md="2">
-                            <Button color="primary" onClick={this.props.setModalStateForAdd}>
+                            <Button color="primary" onClick={this.toggle}>
                                 Want to sell something?
                           </Button>
                         </Col>
