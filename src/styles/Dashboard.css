@@ -1,0 +1,16 @@
+.adDiv{
+    border: 1px solid #f8f9fa;
+    box-shadow: 1px 1px 1px 1px #000000;
+    background-color: #fff;
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    box-shadow: 0 1px 2px #c9c9c9;
+      -moz-box-shadow: 0 1px 2px #c9c9c9;
+      -webkit-box-shadow: 0 1px 2px #c9c9c9;
+      border-radius: 2px;
+}
+
+.adDiv:hover{
+    box-shadow: 0 2px 2px #bababa;
+      -moz-box-shadow: 0 2px 2px #bababa;
+      -webkit-box-shadow: 0 2px 2px #bababa;
+}
