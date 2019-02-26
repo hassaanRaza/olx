@@ -152,7 +152,24 @@ function firebaseLogout() {
     })
 }
 
+function getAdByIdFirebase(id) {
+    return new Promise((res, rej) => {
+        var docRef = db.collection("ads").doc(id);
+
+        docRef.get().then(function (doc) {
+            if (doc.exists) {
+                console.log(doc.data());
+                res(doc.data());
+            }
+            else {
+                rej("No such document");
+            }
+        })
+    })
+
+}
+
 export {
     register, login, updateProfileFirebase,
-    changePasswordFirebase, addImage, addAd, firebaseLogout, db, getCategories
+    changePasswordFirebase, addImage, addAd, firebaseLogout, db, getCategories, getAdByIdFirebase
 };

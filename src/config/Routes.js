@@ -15,7 +15,7 @@ const BasicExample = () => (
             <AuthRoute exact path="/login" component={Login} />
             <AuthRoute exact path="/register" component={Register} />
             <PrivateRoute exact path="/profile" component={Profile} />
-            <PrivateRoute exact path="/AddDetail:id" component={AddDetail} />
+            <PrivateRoute exact path="/AddDetail/:id" component={AddDetail} />
         </div>
     </Router>
 );

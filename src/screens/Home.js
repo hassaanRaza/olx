@@ -225,11 +225,12 @@ export default class Home extends Component {
     }
 
     showDetail(id) {
-        console.log(id);
-        console.log(this);
+        //console.log(id);
+        //console.log(this);
         this.props.history.push({
             pathname: `/AddDetail/${id}`,
         })
+        
         //this.props.history.push('AddDetail');
     }
     getText(e) {
