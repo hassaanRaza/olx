@@ -10,23 +10,27 @@ export default class Ads extends Component {
         super();
 
         this.state = {
-            title: '', description: '', price: 0, images: [], modal: false, catVal: ''
+            title: '', description: '', price: 0, images: [], modal: false, catVal: '', showLoader: false
         }
         this.add = this.add.bind(this);
         // this.toggle = this.toggle.bind(this);
     }
 
-    add(e) {
-        e.preventDefault();
-        const { title, description, price, images, catVal } = this.state;
-        if (title != '' && description != '' && price != 0 && images.length > 0 && catVal != "0") {
-            addAd(title, description, price, images, catVal).then(() => {
-                //alert('yes');
-                //this.setState({modal:false});
-            });
+    async add(e) {
+        try{
+            e.preventDefault();
+            const { title, description, price, images, catVal, showLoader } = this.state;
+            if (title != '' && description != '' && price != 0 && images.length > 0 && catVal != "0") {
+                this.setState({showLoader:true});
+                await addAd(title, description, price, images, catVal);
+                this.setState({showLoader:false});
+            }
+            else {
+                alert('All fields are required!');
+            }
         }
-        else {
-            alert('All fields are required!');
+        catch(e){
+            this.setState({showLoader:false});
         }
 
     }
@@ -39,6 +43,7 @@ export default class Ads extends Component {
     }
 
     render() {
+        const {showLoader} = this.state;
         return (
             <div>
                 <Modal isOpen={this.props.modalState} toggle={this.props.toggle} className={this.props.className}>
@@ -76,7 +81,7 @@ export default class Ads extends Component {
                         </form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button onClick={this.add} color="success">Submit</Button>
+                        <Button onClick={this.add} color="success">{showLoader ? 'Please wait..' : 'Submit'}</Button>
                         <Button color="secondary" onClick={this.props.toggle}>Close</Button>
                     </ModalFooter>
                 </Modal>

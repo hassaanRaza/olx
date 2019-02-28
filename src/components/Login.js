@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Input, Label, FormGroup, Button, Container, Row, Col } from 'reactstrap';
-import { login, getUserId } from '../config/Firebase';
-import {authInfo} from '../config/Routes';
+import { login, getUserId, loginWithGoogle } from '../config/Firebase';
+import { authInfo } from '../config/Routes';
+import loader from '../images/loader.gif';
 
 export default class Login extends Component {
   constructor() {
@@ -10,26 +11,44 @@ export default class Login extends Component {
     this.state = {
       email: '',
       password: '',
+      showLoder : false
     }
     this.signIn = this.signIn.bind(this);
     this.showRegister = this.showRegister.bind(this);
+    this.signInWithGoogle = this.signInWithGoogle.bind(this);
   }
   async signIn() {
-    const { email, password } = this.state;
+    const { email, password} = this.state;
+    this.setState({showLoder:true});
     const user = await login(email, password);
     //localStorage.setItem("currentUser", JSON.stringify(user))
     authInfo.login(user);
-    this.props.history.push('/');
+    this.props.history.push({
+      pathname: '/',
+      state: {user}
+    });
     //console.log('user from component..', JSON.stringify(user));
     this.props.currentUser(user);
+    this.setState({showLoder:false});
     //this.props.user(user);
   }
 
-  showRegister(){
+  showRegister() {
     this.props.history.push('register');
   }
 
+  async signInWithGoogle(){
+    try{
+      const user = await loginWithGoogle();
+      console.log(user);
+    }
+    catch(e){
+
+    }
+  }
+
   render() {
+    const {showLoder} = this.state;
     return (
       <Container className="mt-5">
         <div className="d-flex justify-content-center">
@@ -44,7 +63,15 @@ export default class Login extends Component {
           <Input type="password" onChange={(e) => { this.setState({ password: e.target.value }) }} placeholder="Enter your password.." />
         </FormGroup>
         <FormGroup>
-          <Button onClick={this.signIn} color="primary">Login</Button>
+          <Row>
+            <Col md="1">
+              <Button onClick={this.signIn} color="primary">{showLoder ? 'Wait..' : 'Login'}</Button>
+            </Col>
+            <Col md="3">
+              <Button onClick={this.signInWithGoogle} color="info">Login with google</Button>
+            </Col>
+          </Row>
+
         </FormGroup>
         <FormGroup>
           {/* <Button onClick={this.props.showRegister}>Not registered? Register from here</Button> */}

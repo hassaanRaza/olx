@@ -53,7 +53,7 @@ function login(email, password) {
     return new Promise((resolved, reject) => {
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then((res) => {
-                alert('Login successfully..');
+                //alert('Login successfully..');
                 resolved(getUserById(res.user.uid));
             })
             .catch(function (error) {
@@ -117,7 +117,7 @@ async function addAd(title, description, price, images, catVal) {
     }
     obj.user = db.doc('users/' + firebase.auth().currentUser.uid);
     db.collection("ads").add(obj).then(function (user) {
-        alert("Ad Added Successfully")
+        //alert("Ad Added Successfully")
     });
 }
 
@@ -169,7 +169,31 @@ function getAdByIdFirebase(id) {
 
 }
 
+function loginWithGoogle(){
+    return new Promise((res,rej)=>{
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider).then(function(result) {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            var token = result.credential.accessToken;
+            // The signed-in user info.
+            var user = result.user;
+            res(user);
+            // ...
+          }).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+          });
+    })
+}
+
 export {
     register, login, updateProfileFirebase,
-    changePasswordFirebase, addImage, addAd, firebaseLogout, db, getCategories, getAdByIdFirebase
+    changePasswordFirebase, addImage, addAd, firebaseLogout, db, getCategories, getAdByIdFirebase,
+    loginWithGoogle
 };

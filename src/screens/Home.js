@@ -11,8 +11,9 @@ import '../styles/Dashboard.css';
 
 export default class Home extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        
 
         this.state = {
             adsList: [],
@@ -121,7 +122,7 @@ export default class Home extends Component {
                     snapshot.docChanges().forEach((change) => {
                         if (change.type === "added") {
                             if (change.doc.data().title != null && change.doc.data().description != null && change.doc.data().price != null
-                                && change.doc.data().images.length > 0 && change.doc.data().category != null
+                                && change.doc.data().images.length != 0 && change.doc.data().category != null
                             ) {
                                 //console.log(change.doc.id);
                                 const obj = { id: change.doc.id, ...change.doc.data() }
@@ -148,19 +149,13 @@ export default class Home extends Component {
             .get().then(doc => {
                 //console.log(doc);
                 doc.forEach(res => {
-
-                    myArr.push(parseInt(res.data().price) || 0);
-                    //console.log(res.data().price);
-
-
-                    //     const maxVal = parseInt(res.data().price)
-                    //     console.log(maxVal);
-                    //     this.setState({
-                    //       maxPrice: maxVal,
-                    //       value: {max:maxVal, min:0}
-                    //     })
-
-
+                    //console.log(res.data());
+                    if(res.data().title != null && res.data().description != null && res.data().price != null
+                    && res.data().images.length != 0 && res.data().category != null){
+                        myArr.push(parseInt(res.data().price) || 0);
+                    }
+                    
+                    
                 });
                 const val = Math.max.apply(null, myArr);
                 this.setState({
@@ -250,7 +245,7 @@ export default class Home extends Component {
                         </Col>
                         <Col md="2">
                             <Button color="primary" onClick={this.toggle}>
-                                Want to sell something?
+                                Want to sell?
                           </Button>
                         </Col>
                     </Row>
