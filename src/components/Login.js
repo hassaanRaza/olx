@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Input, Label, FormGroup, Button, Container, Row, Col } from 'reactstrap';
-import { login, getUserId } from '../config/Firebase';
+import { login, getUserId, loginWithFacebook } from '../config/Firebase';
 import {authInfo} from '../config/Routes';
 
 export default class Login extends Component {
@@ -13,6 +13,7 @@ export default class Login extends Component {
     }
     this.signIn = this.signIn.bind(this);
     this.showRegister = this.showRegister.bind(this);
+    this.loginWithFb = this.loginWithFb.bind(this);
   }
   async signIn() {
     const { email, password } = this.state;
@@ -27,6 +28,15 @@ export default class Login extends Component {
 
   showRegister(){
     this.props.history.push('register');
+  }
+
+ async loginWithFb() {
+    const user = await loginWithFacebook();
+    //console.log(user);
+    const obj = {age:"", email:user.email, fullname: user.displayName};
+    authInfo.login(obj);
+    this.props.history.push('/');
+    this.props.currentUser(obj);
   }
 
   render() {
@@ -44,7 +54,15 @@ export default class Login extends Component {
           <Input type="password" onChange={(e) => { this.setState({ password: e.target.value }) }} placeholder="Enter your password.." />
         </FormGroup>
         <FormGroup>
-          <Button onClick={this.signIn} color="primary">Login</Button>
+          <Row>
+            <Col md="1">
+            <Button onClick={this.signIn} color="primary">Login</Button>  
+            </Col>
+            <Col md="3">
+            <Button onClick={this.loginWithFb} color="info">Login with facebook</Button>  
+            </Col>
+          </Row>
+          
         </FormGroup>
         <FormGroup>
           {/* <Button onClick={this.props.showRegister}>Not registered? Register from here</Button> */}

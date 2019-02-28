@@ -169,7 +169,25 @@ function getAdByIdFirebase(id) {
 
 }
 
+function loginWithFacebook() {
+    return new Promise((res, rej) => {
+        var provider = new firebase.auth.FacebookAuthProvider();
+
+        firebase.auth().signInWithPopup(provider).then(function (result) {
+            var token = result.credential.accessToken;
+            var user = result.user;
+            res(user);
+        }).catch(function (error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(errorMessage);
+        })
+    })
+
+}
+
 export {
     register, login, updateProfileFirebase,
-    changePasswordFirebase, addImage, addAd, firebaseLogout, db, getCategories, getAdByIdFirebase
+    changePasswordFirebase, addImage, addAd, firebaseLogout, db, getCategories, getAdByIdFirebase,
+    loginWithFacebook
 };
