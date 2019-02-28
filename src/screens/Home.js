@@ -49,7 +49,9 @@ export default class Home extends Component {
                     if (res.data().title != null && res.data().description != null && res.data().price != null
                         && res.data().images.length > 0 && res.data().category != null
                     ) {
-                        mySearchArr.push(res.data());
+                        const obj = {id: res.id, ...res.data()}
+                        //console.log('res==>', res);
+                        mySearchArr.push(obj);
                         this.setState({
                             adsList: mySearchArr
                         })

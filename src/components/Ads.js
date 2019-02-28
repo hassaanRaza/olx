@@ -77,7 +77,7 @@ export default class Ads extends Component {
                                 <Label>Images:</Label>
                                 <Input multiple onChange={(e) => { this.setState({ images: e.target.files }) }} type="file" required />
                             </FormGroup>
-
+                            
                         </form>
                     </ModalBody>
                     <ModalFooter>
