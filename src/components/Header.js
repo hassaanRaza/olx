@@ -7,9 +7,9 @@ import { firebaseLogout } from '../config/Firebase';
 
 export default class Header extends Component {
 
-    constructor() {
-        super();
-
+    constructor(props) {
+        super(props);
+        console.log(props);
         this.state = { user: null }
 
         this.logout = this.logout.bind(this);
@@ -28,7 +28,10 @@ export default class Header extends Component {
         this.setState({ user: null });
         //this.props.history.push('login');
     }
-
+    static getDerivedStateFromProps(){
+        let user = JSON.parse(localStorage.getItem("currentUser"));
+        return {user};
+    }
     componentDidMount() {
         let user = JSON.parse(localStorage.getItem("currentUser"));
         //console.log(currentUser);
@@ -50,7 +53,7 @@ export default class Header extends Component {
                     <NavItem>
                         {user != null &&
                             
-                            <NavLink><Link to="/profile">Profile</Link></NavLink>
+                            <NavLink onClick><Link to="/profile">Profile</Link></NavLink>
                         }
                     </NavItem>
                     <NavItem>
