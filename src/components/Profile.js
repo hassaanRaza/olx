@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import {Input, Label, FormGroup, Button, Container} from 'reactstrap';
 import {updateProfileFirebase} from '../config/Firebase';
+import { connect } from 'react-redux';
 
-
-export default class Profile extends Component {
-    constructor(){
-        super();
-        this.state = { user:{fullname: '', emal: '', age: 0},
+class Profile extends Component {
+    constructor(props){
+        super(props);
+        console.log("Redux..", props)
+        this.state = { user:{fullname: props.user.fullname, emal: props.user.email, age: props.user.age},
             email: '',
             //password: props.password,
             firstName: '',
@@ -58,3 +59,11 @@ export default class Profile extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+    return{
+        user: state.user
+    }
+}
+
+export default connect(mapStateToProps)(Profile);

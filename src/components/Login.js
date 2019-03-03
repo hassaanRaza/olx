@@ -3,8 +3,10 @@ import { Input, Label, FormGroup, Button, Container, Row, Col } from 'reactstrap
 import { login, getUserId, loginWithFacebook, loginWithGoogle } from '../config/Firebase';
 import {authInfo} from '../config/Routes';
 import loader from '../images/loader.gif';
+import { updateUser } from '../redux/action';
+import { connect } from 'react-redux';
 
-export default class Login extends Component {
+class Login extends Component {
   constructor() {
     super();
 
@@ -24,6 +26,7 @@ export default class Login extends Component {
     const user = await login(email, password);
     //localStorage.setItem("currentUser", JSON.stringify(user))
     authInfo.login(user);
+    this.props.updateUserFunc(user);
     this.props.history.push({
       pathname: '/',
       state: {user}
@@ -93,3 +96,17 @@ export default class Login extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return{
+      user: state.user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+      updateUserFunc: (user) => dispatch(updateUser(user))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
