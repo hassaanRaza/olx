@@ -17,7 +17,12 @@ export default class Register extends Component {
     signUp(){
         const {firstName, email, password, age} = this.state;
         const user = {firstName, email, password, age};
-        register(user);
+        register(user).then(res=>{
+          if(res == "Registered successfully.."){
+            alert("Registered successfully..");
+            this.props.history.push('login');      
+          }
+        });
     }
 
     showLogin(){

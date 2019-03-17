@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Input, Label, FormGroup, Button, Container } from 'reactstrap';
 import { changePasswordFirebase } from '../config/Firebase';
+import { connect } from 'react-redux';
 
-export default class ChangePassword extends Component {
+class ChangePassword extends Component {
     constructor(props) {
         super(props);
         console.log(props);
@@ -16,12 +17,13 @@ export default class ChangePassword extends Component {
         const { newPassword } = this.state;
         changePasswordFirebase(newPassword);
     }
-    static getDerivedStateFromProps(){
-        let user = JSON.parse(localStorage.getItem("currentUser"));
-        return {user};
-    }
+    // static getDerivedStateFromProps(){
+    //     let user = JSON.parse(localStorage.getItem("currentUser"));
+    //     return {user};
+    // }
     render() {
-        const { email, user } = this.state;
+        const { email } = this.state;
+        const {user} = this.props;
         return (
             <Container className="mt-5">
                 <div className="d-flex justify-content-center">
@@ -43,3 +45,12 @@ export default class ChangePassword extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.userReducer.user,
+    }
+}
+
+
+export default connect(mapStateToProps, null)(ChangePassword);

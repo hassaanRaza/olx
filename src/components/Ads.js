@@ -10,7 +10,7 @@ export default class Ads extends Component {
         super();
 
         this.state = {
-            title: '', description: '', price: 0, images: [], modal: false, catVal: '', showLoader: false
+            title: '', description: '', price: 0, images: [], modal: false, catVal: '', showLoader: false, locVal: ''
         }
         this.add = this.add.bind(this);
         // this.toggle = this.toggle.bind(this);
@@ -19,11 +19,12 @@ export default class Ads extends Component {
     async add(e) {
         try{
             e.preventDefault();
-            const { title, description, price, images, catVal, showLoader } = this.state;
-            if (title != '' && description != '' && price != 0 && images.length > 0 && catVal != "0") {
+            const { title, description, price, images, catVal, showLoader, locVal } = this.state;
+            if (title != '' && description != '' && price != 0 && images.length > 0 && catVal != "0" && locVal != "0" ) {
                 this.setState({showLoader:true});
-                await addAd(title, description, price, images, catVal);
+                await addAd(title, description, price, images, catVal, locVal);
                 this.setState({showLoader:false});
+                this.props.toggle();
             }
             else {
                 alert('All fields are required!');
@@ -76,6 +77,15 @@ export default class Ads extends Component {
                             <FormGroup>
                                 <Label>Images:</Label>
                                 <Input multiple onChange={(e) => { this.setState({ images: e.target.files }) }} type="file" required />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>Location:</Label>
+                                <select className="form-control" onChange={(e) => { this.setState({ locVal: e.target.value }) }}>
+                                    <option value="0">Select</option>
+                                    <option value="Karachi">Karachi</option>
+                                    <option value="Lahore">Lahore</option>
+                                    <option value="Islamabad">Islamabad</option>
+                                </select>
                             </FormGroup>
                             
                         </form>

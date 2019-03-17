@@ -1,14 +1,11 @@
 const INITIAL_STATE = {
-    user : null
+    roomInfo : [],
 }
 
 const reducer = (state = INITIAL_STATE, action) => {
     switch(action.type){
-        case "UPDATE_USER":{
-            return {...state, user: action.data};
-        }
-        case "REMOVE_USER":{
-            return {...state, user:null};
+        case "UPDATE_ROOM":{
+            return {...state, roomInfo: action.data};
         }
         default:{
             return state;

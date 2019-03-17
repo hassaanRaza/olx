@@ -3,63 +3,51 @@ import { Link } from "react-router-dom";
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink, Button, Input } from 'reactstrap';
 import { authInfo } from '../config/Routes';
 import { firebaseLogout } from '../config/Firebase';
+import { connect } from 'react-redux';
+import { removeUser } from '../redux/user/action';
 
-
-export default class Header extends Component {
+class Header extends Component {
 
     constructor(props) {
         super(props);
-        console.log(props);
-        this.state = { user: null }
-
+        this.state = { user: props.user }
         this.logout = this.logout.bind(this);
     }
 
     logout() {
         firebaseLogout().then((res) => {
             if (res === 'Done') {
-                //localStorage.removeItem("currentUser");
                 
-
-                //this.props.removeCurrentUser(null);
             }
         })
         authInfo.logout();
-        this.setState({ user: null });
-        //this.props.history.push('login');
+        this.props.removeUserFunc();
+        this.setState({ user: this.props.user });
+        
     }
-    static getDerivedStateFromProps(){
-        let user = JSON.parse(localStorage.getItem("currentUser"));
+    static getDerivedStateFromProps(props){
+        let user = props.user;
         return {user};
     }
-    componentDidMount() {
-        let user = JSON.parse(localStorage.getItem("currentUser"));
-        //console.log(currentUser);
-        if (user) {
-            this.setState({
-                user
-            })
-        }
-    }
-
+    
     render() {
         const { user } = this.state;
         return (
-            <Navbar color="light" light expand="md">
-                <NavbarBrand style={{ fontSize: '2em' }}>
-                    <Link style={{ textDecoration: 'none', color: '#000' }} to="/">OLX</Link>
-                </NavbarBrand>
+            <Navbar color="dark" light expand="md">
+
+                <Link style={{ textDecoration: 'none', color: '#fff' }} to="/">OLX</Link>
+
                 <Nav className="ml-auto" navbar>
                     <NavItem>
                         {user != null &&
-                            
-                            <NavLink onClick><Link to="/profile">Profile</Link></NavLink>
+
+                            <Link className="mr-2" style={{ textDecoration: 'none', color: '#fff' }} to="/profile">Profile</Link>
                         }
                     </NavItem>
                     <NavItem>
                         {user == null ?
-                            <NavLink><Link to="/login">Login</Link></NavLink>
-                            : <NavLink onClick={this.logout}><Link to="/login">Logout</Link></NavLink>
+                            <Link style={{ textDecoration: 'none', color: '#fff' }} to="/login">Login</Link>
+                            : <Link style={{ textDecoration: 'none', color: '#fff' }} onClick={this.logout} to="/login">Logout</Link>
                         }
                     </NavItem>
                 </Nav>
@@ -67,3 +55,17 @@ export default class Header extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.userReducer.user
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        removeUserFunc: (user) => dispatch(removeUser(user))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Input, Label, FormGroup, Button, Container, Row, Col } from 'reactstrap';
 import { login, getUserId, loginWithFacebook, loginWithGoogle } from '../config/Firebase';
-import {authInfo} from '../config/Routes';
+import { authInfo } from '../config/Routes';
 import loader from '../images/loader.gif';
-import { updateUser } from '../redux/action';
+import { updateUser } from '../redux/user/action';
 import { connect } from 'react-redux';
 
 class Login extends Component {
@@ -13,7 +13,7 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      showLoder : false
+      showLoder: false
     }
     this.signIn = this.signIn.bind(this);
     this.showRegister = this.showRegister.bind(this);
@@ -21,47 +21,40 @@ class Login extends Component {
     this.signInWithGoogle = this.signInWithGoogle.bind(this);
   }
   async signIn() {
-    const { email, password} = this.state;
-    this.setState({showLoder:true});
+    const { email, password } = this.state;
+    this.setState({ showLoder: true });
     const user = await login(email, password);
-    //localStorage.setItem("currentUser", JSON.stringify(user))
     authInfo.login(user);
     this.props.updateUserFunc(user);
-    this.props.history.push({
-      pathname: '/',
-      state: {user}
-    });
-    //console.log('user from component..', JSON.stringify(user));
-    this.props.currentUser(user);
-    this.setState({showLoder:false});
-    //this.props.user(user);
+    this.props.history.push('/');
+    this.setState({ showLoder: false });
   }
 
   showRegister() {
     this.props.history.push('register');
   }
 
- async loginWithFb() {
+  async loginWithFb() {
     const user = await loginWithFacebook();
-    //console.log(user);
-    const obj = {age:"", email:user.email, fullname: user.displayName};
+    const obj = { age: "", email: user.email, fullname: user.displayName };
     authInfo.login(obj);
+    this.props.updateUserFunc(obj);
     this.props.history.push('/');
-    this.props.currentUser(obj);
+    //this.props.currentUser(obj);
   }
 
-  async signInWithGoogle(){
-    try{
+  async signInWithGoogle() {
+    try {
       const user = await loginWithGoogle();
       console.log(user);
     }
-    catch(e){
+    catch (e) {
 
     }
   }
 
   render() {
-    const {showLoder} = this.state;
+    const { showLoder } = this.state;
     return (
       <Container className="mt-5">
         <div className="d-flex justify-content-center">
@@ -77,13 +70,9 @@ class Login extends Component {
         </FormGroup>
         <FormGroup>
           <Row>
-            <Col md="1">
-            <Button onClick={this.signIn} color="primary">{showLoder ? 'Wait..' : 'Login'}</Button>  
-            </Col>
-            <Col md="2">
-            <Button onClick={this.loginWithFb} color="info">Facebook Login</Button>  
-            </Col>
-            <Col md="3">
+            <Col md="12">
+              <Button className="mr-1" onClick={this.signIn} color="primary">{showLoder ? 'Wait..' : 'Login'}</Button>
+              <Button className="mr-1" onClick={this.loginWithFb} color="info">Facebook Login</Button>
               <Button onClick={this.signInWithGoogle} color="info">Google Login</Button>
             </Col>
           </Row>
@@ -98,14 +87,14 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return{
-      user: state.user
+  return {
+    user: state.userReducer.user
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-      updateUserFunc: (user) => dispatch(updateUser(user))
+    updateUserFunc: (user) => dispatch(updateUser(user))
   }
 }
 

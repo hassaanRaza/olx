@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 import {Input, Label, FormGroup, Button, Container} from 'reactstrap';
-import {updateProfileFirebase} from '../config/Firebase';
 import { connect } from 'react-redux';
+import { updateUserProfile } from '../redux/user/action';
 
 class Profile extends Component {
     constructor(props){
         super(props);
-        console.log("Redux..", props)
-        this.state = { user:{fullname: props.user.fullname, emal: props.user.email, age: props.user.age},
-            email: '',
-            //password: props.password,
-            firstName: '',
-            age: 0
-        }
+
+        this.state = {user:props.user}
+        console.log("Redux..", props);
         this.updateProfile = this.updateProfile.bind(this);
         this.showChangePassword = this.showChangePassword.bind(this);
     }
     updateProfile(){
         const {user} = this.state;
-        updateProfileFirebase(user.fullname, user.age, user.email);
+        this.props.updateProfileAction(user.fullname, user.age, user.email);
+        alert('Profile updated..');
     }
 
     showChangePassword(){
@@ -26,10 +23,10 @@ class Profile extends Component {
         this.props.history.push('/changePassword');
     }
 
-    static getDerivedStateFromProps(){
-        let user = JSON.parse(localStorage.getItem("currentUser"));
-        return {user}
-    }
+    // static getDerivedStateFromProps(){
+    //     let user = JSON.parse(localStorage.getItem("currentUser"));
+    //     return {user}
+    // }
     
 
   render() {
@@ -41,15 +38,15 @@ class Profile extends Component {
         </div>
         <FormGroup>
             <Label>First Name:</Label>
-            <Input value={user.fullname} onChange={(e)=>{this.setState({user:{fullname:e.target.value}})}} placeholder="Enter your first name.." />
+            <Input value={user.fullname} onChange={(e)=>{this.setState({ user: {...user, fullname:e.target.value}  })}} placeholder="Enter your first name.." />
         </FormGroup>
         <FormGroup>
             <Label>Email:</Label>
-            <Input value={user.email} disabled onChange={(e)=>{this.setState({user:{email:e.target.value}})}} placeholder="Enter your email.." />
+            <Input value={user.email} disabled onChange={(e)=>{this.setState({ user: {...user, email:e.target.value}  })}} placeholder="Enter your email.." />
         </FormGroup>
         <FormGroup>
             <Label>Age:</Label>
-            <Input value={user.age} type="number" onChange={(e)=>{this.setState({user:{age:e.target.value}})}} placeholder="Enter your age.." />
+            <Input value={user.age} type="number" onChange={(e)=>{this.setState({ user: {...user, age:e.target.value}  })}} placeholder="Enter your age.." />
         </FormGroup>
         <FormGroup className="form-inline">
             <Button onClick={this.updateProfile} color="primary">Update Profile</Button>
@@ -62,8 +59,14 @@ class Profile extends Component {
 
 const mapStateToProps = (state) => {
     return{
-        user: state.user
+        user: state.userReducer.user
     }
 }
 
-export default connect(mapStateToProps)(Profile);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateProfileAction: (fullname, age, email) => dispatch(updateUserProfile(fullname, age, email)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
